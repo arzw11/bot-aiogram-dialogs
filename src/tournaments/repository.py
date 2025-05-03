@@ -2,31 +2,24 @@ from abc import (
     ABC,
     abstractmethod,
 )
-from typing import (
-    List,
-    Optional,
-)
+from typing import Optional
 
 from src.tournaments.entity import Tournament
 
 
 class BaseTournamentRepository(ABC):
     @abstractmethod
-    async def add(self, tournament: Tournament):
+    async def add(self, tournament: Tournament) -> None:
         ...
 
     @abstractmethod
-    async def get_tournament(self, tournament_id: int) -> Tournament:
+    async def get_by_id(self, tournament_id: int) -> Optional[Tournament]:
         ...
 
     @abstractmethod
-    async def get_list_tournaments_by_user(self, user_id: int) -> List[Tournament]:
+    async def update(self, tournament: Tournament) -> Tournament:
         ...
 
     @abstractmethod
-    async def update_tournament(self, tournament_id: int, data: dict) -> Optional[Tournament]:
-        ...
-
-    @abstractmethod
-    async def delete_tournament(self, tournament_id: int) -> Optional[Tournament]:
+    async def delete(self, tournament_id: int) -> bool:
         ...

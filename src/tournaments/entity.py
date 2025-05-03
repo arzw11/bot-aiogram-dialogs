@@ -7,7 +7,10 @@ from typing import (
     Optional,
 )
 
-from src.bets.entity import BetResult
+from src.bets.entity import (
+    Bet,
+    BetResult,
+)
 
 
 @dataclass(frozen=True)
@@ -16,8 +19,8 @@ class Tournament:
     title: str
     bank: int
 
-    user: "User" # noqa
-    bets: Optional[List["Bet"]] # noqa
+    user_id: int
+    bets: Optional[List[Bet]]
 
     bet_count: int = field(default=0)
     win_count: int = field(default=0)
@@ -30,8 +33,8 @@ class Tournament:
         tournament_id: int,
         title: str,
         bank: int,
-        user: "User", # noqa
-        bets: Optional[List["Bet"]], # noqa
+        user_id: int,
+        bets: Optional[List[Bet]],
     ) -> "Tournament":
         final_balance = bank
         bet_count = 0
@@ -52,7 +55,7 @@ class Tournament:
             tournament_id=tournament_id,
             title=title,
             bank=bank,
-            user=user,
+            user_id=user_id,
             bets=bets,
             bet_count=bet_count,
             win_count=win_count,

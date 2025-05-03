@@ -12,21 +12,25 @@ from src.bets.entity import Bet
 
 class BaseBetRepository(ABC):
     @abstractmethod
-    def add(self, bet: Bet):
+    async def add(self, bet: Bet) -> None:
         ...
 
     @abstractmethod
-    def get_bet(self, bet_id: int) -> Bet:
+    async def get_by_id(self, bet_id: int) -> Optional[Bet]:
         ...
 
     @abstractmethod
-    def get_list_bets_by_user_id(self, user_id: int) -> List[Bet]:
+    async def get_all_by_user_id(self, user_id: int) -> List[Bet]:
         ...
 
     @abstractmethod
-    def update_bet(self, bet_id: int, data: dict) -> Optional[Bet]:
+    async def get_all_by_tournament_id(self, tournament_id: int) -> List[Bet]:
         ...
 
     @abstractmethod
-    def delete(self, bet_id: int) -> Optional[Bet]:
+    async def update(self, bet: Bet) -> Bet:
+        ...
+
+    @abstractmethod
+    async def delete(self, bet_id: int) -> bool:
         ...

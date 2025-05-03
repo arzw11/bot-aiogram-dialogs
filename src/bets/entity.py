@@ -11,8 +11,8 @@ class BetResult(Enum):
 @dataclass(frozen=True)
 class Bet:
     bet_id: int
-    user: "User" # noqa
-    tournament: Optional["Tournament"] # noqa
+    user_id: int
+    tournament_id: Optional[int] # noqa
     amount: int
     odds: float
     result: BetResult
@@ -22,8 +22,8 @@ class Bet:
     def from_result(
         cls,
         bet_id: int,
-        user: "User", # noqa
-        tournament: Optional["Tournament"], # noqa
+        user_id: int,
+        tournament_id: Optional[int],
         amount: int,
         odds: float,
         result: BetResult,
@@ -32,8 +32,8 @@ class Bet:
 
         return cls(
             bet_id=bet_id,
-            user=user,
-            tournament=tournament,
+            user_id=user_id,
+            tournament_id=tournament_id,
             amount=amount,
             odds=odds,
             result=result,

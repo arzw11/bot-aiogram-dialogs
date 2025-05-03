@@ -1,42 +1,60 @@
 import pytest
 
-
-@pytest.mark.asyncio
-async def test_tournament_repo_add_and_get_tournament(tournament_repo, dummy_tournament):
-    await tournament_repo.add(dummy_tournament)
-    fetched = await tournament_repo.get_tournament(dummy_tournament.tournament_id)
-    assert fetched == dummy_tournament, f"{fetched=}"
-    assert fetched.bank == 1000, f"{fetched.bank=}"
-    assert fetched.final_balance == 1100, f"{fetched.final_balance=}"
+from src.tournaments.entity import Tournament
 
 
-@pytest.mark.asyncio
-async def test_tournament_repo_get_list_tournaments_by_user(tournament_repo, dummy_tournament, dummy_user):
-    await tournament_repo.add(dummy_tournament)
-    tournaments = await tournament_repo.get_list_tournaments_by_user(dummy_user.user_id)
-    assert len(tournaments) == 1, f"{len(tournaments)=}"
-    assert tournaments[0].tournament_id == dummy_tournament.tournament_id, f"{tournaments[0].tournament_id=}"
-
-
-@pytest.mark.asyncio
-async def test_tournament_repo_update_tournament(tournament_repo, dummy_tournament):
-    await tournament_repo.add(dummy_tournament)
-    updated = await tournament_repo.update_tournament(
-        dummy_tournament.tournament_id, {
-            "title": "Updated Tournament",
-            "bank": 1200,
-            "bets": dummy_tournament.bets,
-        },
+def make_tournament(tournament_id: int, user_id: int) -> Tournament:
+    return Tournament.from_bets(
+        tournament_id=tournament_id,
+        title=f"Tournament #{tournament_id}",
+        bank=1000,
+        user_id=user_id,
+        bets=[],
     )
-    assert updated.title == "Updated Tournament", f"{updated.title=}"
-    assert updated.bank == 1200, f"{updated.bank=}"
-    assert updated.final_balance == 1300, f"{updated.final_balance=}"
 
 
 @pytest.mark.asyncio
-async def test_tournament_repo_delete_tournament(tournament_repo, dummy_tournament):
-    await tournament_repo.add(dummy_tournament)
-    deleted = await tournament_repo.delete_tournament(dummy_tournament.tournament_id)
-    assert deleted == dummy_tournament, f"{deleted=}"
-    with pytest.raises(KeyError):
-        await tournament_repo.get_tournament(dummy_tournament.tournament_id)
+async def test_tournament_repo_add_and_get(tournament_repo):
+    tournament = make_tournament(1, 42)
+
+    await tournament_repo.add(tournament)
+    fetched = await tournament_repo.get_by_id(1)
+
+    assert fetched == tournament, f"{fetched=}"
+
+
+@pytest.mark.asyncio
+async def test_tournament_repo_update(tournament_repo):
+    tournament = make_tournament(2, 42)
+    await tournament_repo.add(tournament)
+
+    updated = Tournament.from_bets(
+        tournament_id=2,
+        title="Updated Title",
+        bank=2000,
+        user_id=42,
+        bets=[],
+    )
+    result = await tournament_repo.update(updated)
+
+    assert result.title == "Updated Title", f"{result.title=}"
+    fetched = await tournament_repo.get_by_id(2)
+    assert fetched.bank == 2000, f"{fetched.bank=}"
+
+
+@pytest.mark.asyncio
+async def test_tournament_repo_delete(tournament_repo):
+    tournament = make_tournament(3, 42)
+    await tournament_repo.add(tournament)
+
+    deleted = await tournament_repo.delete(3)
+    assert deleted is True, f"{deleted=}"
+
+    fetched = await tournament_repo.get_by_id(3)
+    assert fetched is None, f"{fetched=}"
+
+
+@pytest.mark.asyncio
+async def test_tournament_repo_delete_nonexistent(tournament_repo):
+    deleted = await tournament_repo.delete(tournament_id=99)
+    assert deleted is False, f"{deleted=}"

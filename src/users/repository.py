@@ -2,24 +2,33 @@ from abc import (
     ABC,
     abstractmethod,
 )
-from typing import Optional
+from typing import (
+    List,
+    Optional,
+)
 
+from src.bets.entity import Bet
+from src.tournaments.entity import Tournament
 from src.users.entity import User
 
 
-class UserBaseRepository(ABC):
+class BaseUserRepository(ABC):
     @abstractmethod
-    async def add(self, user: User):
+    async def add(self, user: User) -> None:
         ...
 
     @abstractmethod
-    async def get(self, telegram_id: int) -> Optional[User]:
+    async def get_by_id(self, user_id: int) -> Optional[User]:
         ...
 
     @abstractmethod
-    async def update(self, telegram_id: int, data: dict) -> User:
+    async def get_by_telegram_id(self, telegram_id: int) -> Optional[User]:
         ...
 
     @abstractmethod
-    async def delete(self, telegram_id: int) -> Optional[User]:
+    async def get_tournaments(self, user_id: int) -> List[Tournament]:
+        ...
+
+    @abstractmethod
+    async def get_bets(self, user_id: int) -> List[Bet]:
         ...

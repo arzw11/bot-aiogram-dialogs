@@ -10,136 +10,93 @@ from src.bets.entity import (
     Bet,
     BetResult,
 )
+from src.bets.repository import BaseBetRepository
 from src.tournaments.entity import Tournament
 from src.tournaments.repository import BaseTournamentRepository
 from src.users.entity import User
-from src.users.repository import UserBaseRepository
+from src.users.repository import BaseUserRepository
 
 
-class FakeUserRepository(UserBaseRepository):
-    def __init__(self):
-        self._users: Dict[int, User] = {}
-
-    async def add(self, user: User):
-        self._users[user.telegram_id] = user
-
-    async def get(self, telegram_id: int) -> Optional[User]:
-        return self._users.get(telegram_id)
-
-    async def update(self, telegram_id: int, data: dict) -> User:
-        user = self._users[telegram_id]
-        updated_user = User(
-            user_id=user.user_id,
-            telegram_id=user.telegram_id,
-            name=data.get("name", user.name),
-            tournaments=data.get("tournaments", user.tournaments),
-            bets=data.get("bets", user.bets),
-        )
-        self._users[telegram_id] = updated_user
-
-        return updated_user
-
-    async def delete(self, telegram_id: int) -> Optional[User]:
-        return self._users.pop(telegram_id)
-
-
-class FakeBetRepository:
+class FakeBetRepository(BaseBetRepository):
     def __init__(self):
         self._bets: Dict[int, Bet] = {}
 
     async def add(self, bet: Bet):
         self._bets[bet.bet_id] = bet
 
-    async def get_bet(self, bet_id: int) -> Bet:
-        return self._bets[bet_id]
+    async def get_by_id(self, bet_id: int) -> Optional[Bet]:
+        return self._bets.get(bet_id)
 
-    async def get_list_bets_by_user_id(self, user_id: int) -> List[Bet]:
-        return [b for b in self._bets.values() if b.user.user_id == user_id]
+    async def get_all_by_user_id(self, user_id: int) -> List[Bet]:
+        return [bet for bet in self._bets.values() if bet.user_id == user_id]
 
-    async def update_bet(self, bet_id: int, data: dict) -> Optional[Bet]:
-        bet = self._bets[bet_id]
-        updated = Bet(
-            bet_id=bet.bet_id,
-            user=bet.user,
-            tournament=data.get("tournament", bet.tournament),
-            amount=data.get("amount", bet.amount),
-            odds=data.get("odds", bet.odds),
-            result=data.get("result", bet.result),
-            payout=data.get("payout", bet.payout),
-        )
-        self._bets[bet_id] = updated
-        return updated
+    async def get_all_by_tournament_id(self, tournament_id: int) -> List[Bet]:
+        return [bet for bet in self._bets.values() if bet.tournament_id and bet.tournament_id == tournament_id]
 
-    async def delete(self, bet_id: int) -> Optional[Bet]:
-        return self._bets.pop(bet_id)
+    async def update(self, bet: Bet) -> Bet:
+        self._bets[bet.bet_id] = bet
+        return bet
+
+    async def delete(self, bet_id: int) -> bool:
+        if self._bets.get(bet_id):
+            del self._bets[bet_id]
+            return True
+
+        return False
 
 
 class FakeTournamentRepository(BaseTournamentRepository):
     def __init__(self):
         self._tournaments: Dict[int, Tournament] = {}
 
-    async def add(self, tournament: Tournament):
+    async def add(self, tournament: Tournament) -> None:
         self._tournaments[tournament.tournament_id] = tournament
 
-    async def get_tournament(self, tournament_id: int) -> Tournament:
-        return self._tournaments[tournament_id]
+    async def get_by_id(self, tournament_id: int) -> Optional[Tournament]:
+        return self._tournaments.get(tournament_id)
 
-    async def get_list_tournaments_by_user(self, user_id: int) -> List[Tournament]:
-        return [t for t in self._tournaments.values() if t.user.user_id == user_id]
+    async def update(self, tournament: Tournament) -> Tournament:
+        self._tournaments[tournament.tournament_id] = tournament
+        return tournament
 
-    async def update_tournament(self, tournament_id: int, data: dict) -> Optional[Tournament]:
-        tournament = self._tournaments[tournament_id]
-        updated_tournament = Tournament.from_bets(
-            tournament_id=tournament.tournament_id,
-            title=data.get("title", tournament.title),
-            bank=data.get("bank", tournament.bank),
-            user=tournament.user,
-            bets=data.get("bets", tournament.bets),
-        )
-        self._tournaments[tournament_id] = updated_tournament
-        return updated_tournament
+    async def delete(self, tournament_id: int) -> bool:
+        if self._tournaments.get(tournament_id):
+            del self._tournaments[tournament_id]
+            return True
 
-    async def delete_tournament(self, tournament_id: int) -> Optional[Tournament]:
-        return self._tournaments.pop(tournament_id)
+        return False
 
 
-@pytest.fixture
-def dummy_user():
-    return User(
-        user_id=1,
-        telegram_id=12345,
-        name="Test User",
-        tournaments=[],
-        bets=[],
-    )
+class FakeUserRepository(BaseUserRepository):
+    def __init__(self):
+        self._by_id: Dict[int, User] = {}
+        self._by_telegram: Dict[int, User] = {}
+        self._tournaments_by_user: Dict[int, List[Tournament]] = {}
+        self._bets_by_user: Dict[int, List[Bet]] = {}
 
+    async def add(self, user: User) -> None:
+        self._by_id[user.user_id] = user
+        self._by_telegram[user.telegram_id] = user
+        self._tournaments_by_user[user.user_id] = []
+        self._bets_by_user[user.user_id] = []
 
-@pytest.fixture
-def dummy_bet(dummy_user):
-    return Bet.from_result(
-        bet_id=1,
-        user=dummy_user,
-        tournament=None,
-        amount=100,
-        odds=2.0,
-        result=BetResult.WIN,
-    )
+    async def get_by_id(self, user_id: int) -> Optional[User]:
+        return self._by_id.get(user_id)
 
+    async def get_by_telegram_id(self, telegram_id: int) -> Optional[User]:
+        return self._by_telegram.get(telegram_id)
 
-@pytest.fixture
-def dummy_tournament(dummy_user, dummy_bet):
-    return Tournament.from_bets(
-        tournament_id=1,
-        title="Test Tournament",
-        bank=1000,
-        user=dummy_user,
-        bets=[dummy_bet],
-    )
+    async def get_tournaments(self, user_id: int) -> List[Tournament]:
+        return self._tournaments_by_user.get(user_id, [])
 
+    async def get_bets(self, user_id: int) -> List[Bet]:
+        return self._bets_by_user.get(user_id, [])
 
-@pytest.fixture
-def user_repo():
-    return FakeUserRepository()
+    async def add_tournament_for_user(self, user_id: int, tournament: Tournament):
+        self._tournaments_by_user.setdefault(user_id, []).append(tournament)
+
+    async def add_bet_for_user(self, user_id: int, bet: Bet):
+        self._bets_by_user.setdefault(user_id, []).append(bet)
 
 
 @pytest.fixture
@@ -150,3 +107,38 @@ def bet_repo():
 @pytest.fixture
 def tournament_repo():
     return FakeTournamentRepository()
+
+
+@pytest.fixture
+def user_repo():
+    return FakeUserRepository()
+
+
+@pytest.fixture
+def bets():
+    return [
+        Bet.from_result(
+            bet_id=1,
+            user_id=1,
+            tournament_id=2,
+            amount=1000,
+            odds=1.5,
+            result=BetResult.WIN,
+        ),
+        Bet.from_result(
+            bet_id=2,
+            user_id=1,
+            tournament_id=2,
+            amount=1500,
+            odds=1.5,
+            result=BetResult.LOSS,
+        ),
+        Bet.from_result(
+            bet_id=4,
+            user_id=3,
+            tournament_id=3,
+            amount=1000,
+            odds=1.5,
+            result=BetResult.WIN,
+        ),
+    ]
