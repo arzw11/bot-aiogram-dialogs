@@ -24,7 +24,7 @@ class Tournament(TimedBaseModel):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
 
-    bets: Mapped[List["Bet"]] = relationship(back_populates="tournament") # noqa
+    bets: Mapped[List["Bet"]] = relationship(back_populates="tournament", lazy="selectin") # noqa
     user: Mapped["User"] = relationship(back_populates="tournaments") # noqa
 
     def __str__(self):

@@ -33,9 +33,9 @@ class FakeBetRepository(BaseBetRepository):
     async def get_all_by_tournament_id(self, tournament_id: int) -> List[Bet]:
         return [bet for bet in self._bets.values() if bet.tournament_id and bet.tournament_id == tournament_id]
 
-    async def update(self, bet: Bet) -> Bet:
+    async def update(self, bet: Bet) -> bool:
         self._bets[bet.bet_id] = bet
-        return bet
+        return True
 
     async def delete(self, bet_id: int) -> bool:
         if self._bets.get(bet_id):

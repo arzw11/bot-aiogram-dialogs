@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 from src.bets.converters import bet_to_entity
 from src.tournaments.entity import Tournament as TournamentEntity
 from src.tournaments.model import Tournament as TournamentModel
@@ -19,3 +21,16 @@ def tournament_from_entity(entity: TournamentEntity) -> TournamentModel:
         title=entity.title,
         user_id=entity.user_id,
     )
+
+
+def tournament_to_dict(entity: TournamentEntity) -> dict:
+    tournament_dict = asdict(entity)
+
+    del tournament_dict["bets"]
+    del tournament_dict["tournament_id"]
+    del tournament_dict["bet_count"]
+    del tournament_dict["win_count"]
+    del tournament_dict["loss_count"]
+    del tournament_dict["final_balance"]
+
+    return tournament_dict

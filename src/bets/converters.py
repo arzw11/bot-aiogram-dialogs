@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 from src.bets.entity import Bet as BetEntity
 from src.bets.model import Bet as BetModel
 
@@ -22,3 +24,11 @@ def bet_from_entity(entity: BetEntity) -> BetModel:
         odds=entity.odds,
         result=entity.result,
     )
+
+
+def bet_to_dict_without_bet_id_and_payout(entity: BetEntity) -> dict:
+    bet_dict = asdict(entity)
+    del bet_dict["bet_id"]
+    del bet_dict["payout"]
+
+    return bet_dict

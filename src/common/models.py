@@ -21,6 +21,3 @@ updated_at = Annotated[
 
 class TimedBaseModel(DeclarativeBase):
     id: Mapped[intpk] # noqa
-
-    created_at: Mapped[created_at]
-    updated_at: Mapped[updated_at]

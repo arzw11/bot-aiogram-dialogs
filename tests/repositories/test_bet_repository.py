@@ -49,8 +49,7 @@ async def test_bet_repo_update(bet_repo, bets):
     await bet_repo.add(bet=bet1)
     updated_bet = await bet_repo.update(bet=bet2)
 
-    assert updated_bet != bet1, f"{updated_bet=}"
-    assert updated_bet == bet2, f"{updated_bet=}"
+    assert updated_bet, f"{updated_bet=}"
 
 
 @pytest.mark.asyncio

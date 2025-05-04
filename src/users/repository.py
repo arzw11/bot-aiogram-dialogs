@@ -26,9 +26,9 @@ class BaseUserRepository(ABC):
         ...
 
     @abstractmethod
-    async def get_tournaments(self, user_id: int) -> List[Tournament]:
+    async def get_tournaments(self, user_id: int) -> Optional[List[Tournament]]:
         ...
 
     @abstractmethod
-    async def get_bets(self, user_id: int) -> List[Bet]:
+    async def get_bets(self, user_id: int) -> Optional[List[Bet]]:
         ...

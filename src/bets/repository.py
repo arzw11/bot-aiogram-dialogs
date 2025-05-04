@@ -20,15 +20,15 @@ class BaseBetRepository(ABC):
         ...
 
     @abstractmethod
-    async def get_all_by_user_id(self, user_id: int) -> List[Bet]:
+    async def get_all_by_user_id(self, user_id: int) -> Optional[List[Bet]]:
         ...
 
     @abstractmethod
-    async def get_all_by_tournament_id(self, tournament_id: int) -> List[Bet]:
+    async def get_all_by_tournament_id(self, tournament_id: int) -> Optional[List[Bet]]:
         ...
 
     @abstractmethod
-    async def update(self, bet: Bet) -> Bet:
+    async def update(self, bet: Bet) -> bool:
         ...
 
     @abstractmethod

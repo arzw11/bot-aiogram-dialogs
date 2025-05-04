@@ -17,7 +17,7 @@ class BaseTournamentRepository(ABC):
         ...
 
     @abstractmethod
-    async def update(self, tournament: Tournament) -> Tournament:
+    async def update(self, tournament: Tournament) -> bool:
         ...
 
     @abstractmethod
