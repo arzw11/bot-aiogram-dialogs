@@ -26,3 +26,6 @@ ENV/
 
 # Logs and databases
 *.log
+
+# Environment variables
+.env
