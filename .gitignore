@@ -1,7 +1,28 @@
-venv
-*.log
+# Python
+__pycache__
 *.pyc
-.env
-__pycache__/
-.pytest_cache
+*.pyo
+*.pyd
+*.pyc
 *.db
+*.sqlite3
+.Python
+env
+venv
+ENV
+env/
+venv/
+ENV/
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+
+
+# Logs and databases
+*.log
