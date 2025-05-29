@@ -11,14 +11,14 @@ from sqlalchemy import (
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src.bets.converters import bet_to_entity
-from src.bets.entity import Bet as BetEntity
-from src.tournaments.converters import tournament_to_entity
-from src.tournaments.entity import Tournament as TournamentEntity
-from src.users.converters import user_to_entity
-from src.users.entity import User as UserEntity
-from src.users.model import User as UserModel
-from src.users.repository import BaseUserRepository
+from src.infra.converters.bets import bet_to_entity
+from src.domain.entities.bets import Bet as BetEntity
+from src.infra.converters.tournaments import tournament_to_entity
+from src.domain.entities.tournaments import Tournament as TournamentEntity
+from src.infra.converters.users import user_to_entity
+from src.domain.entities.users import User as UserEntity
+from src.infra.database.models.users import User as UserModel
+from src.infra.repositories.users.base import BaseUserRepository
 
 
 class SQLUserRepository(BaseUserRepository):

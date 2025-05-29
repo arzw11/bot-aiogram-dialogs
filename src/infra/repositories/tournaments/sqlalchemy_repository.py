@@ -10,13 +10,13 @@ from sqlalchemy import (
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src.tournaments.converters import (
+from src.infra.converters.tournaments import (
     tournament_to_dict,
     tournament_to_entity,
 )
-from src.tournaments.entity import Tournament as TournamentEntity
-from src.tournaments.model import Tournament as TournamentModel
-from src.tournaments.repository import BaseTournamentRepository
+from src.domain.entities.tournaments import Tournament as TournamentEntity
+from src.infra.database.models.tournaments import Tournament as TournamentModel
+from src.infra.repositories.tournaments.base import BaseTournamentRepository
 
 
 class SQLTournamentRepository(BaseTournamentRepository):

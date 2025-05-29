@@ -1,1 +1,1 @@
-from .model import User  # noqa
+from src.infra.database.models.users import User  # noqa

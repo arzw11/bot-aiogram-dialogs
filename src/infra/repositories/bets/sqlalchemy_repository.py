@@ -12,13 +12,13 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.bets.converters import (
+from src.infra.converters.bets import (
     bet_to_dict_without_bet_id_and_payout,
     bet_to_entity,
 )
-from src.bets.entity import Bet as BetEntity
-from src.bets.model import Bet as BetModel
-from src.bets.repository import BaseBetRepository
+from src.domain.entities.bets import Bet as BetEntity
+from src.infra.database.models.bets import Bet as BetModel
+from src.infra.repositories.bets.base import BaseBetRepository
 
 
 class SQLBetRepository(BaseBetRepository):
