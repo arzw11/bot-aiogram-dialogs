@@ -1,10 +1,10 @@
 import pytest
 
 from src.domain.entities.bets import Bet as BetEntity
-from src.infra.database.models.bets import Bet as BetModel
 from src.domain.entities.tournaments import Tournament as TournamentEntity
-from src.infra.database.models.tournaments import Tournament as TournamentModel
 from src.domain.entities.users import User as UserEntity
+from src.infra.database.models.bets import Bet as BetModel
+from src.infra.database.models.tournaments import Tournament as TournamentModel
 from src.infra.database.models.users import User as UserModel
 
 

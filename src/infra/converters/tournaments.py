@@ -1,7 +1,7 @@
 from dataclasses import asdict
 
-from src.infra.converters.bets import bet_to_entity
 from src.domain.entities.tournaments import Tournament as TournamentEntity
+from src.infra.converters.bets import bet_to_entity
 from src.infra.database.models.tournaments import Tournament as TournamentModel
 
 

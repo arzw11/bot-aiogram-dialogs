@@ -1,8 +1,8 @@
+from src.domain.entities.users import User as UserEntity
 from src.infra.converters.users import (
     user_from_entity,
     user_to_entity,
 )
-from src.domain.entities.users import User as UserEntity
 from src.infra.database.models.users import User as UserModel
 
 

@@ -10,11 +10,11 @@ from sqlalchemy import (
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
+from src.domain.entities.tournaments import Tournament as TournamentEntity
 from src.infra.converters.tournaments import (
     tournament_to_dict,
     tournament_to_entity,
 )
-from src.domain.entities.tournaments import Tournament as TournamentEntity
 from src.infra.database.models.tournaments import Tournament as TournamentModel
 from src.infra.repositories.tournaments.base import BaseTournamentRepository
 

@@ -10,10 +10,10 @@ from src.domain.entities.bets import (
     Bet,
     BetResult,
 )
-from src.infra.repositories.bets.base import BaseBetRepository
 from src.domain.entities.tournaments import Tournament
-from src.infra.repositories.tournaments.base import BaseTournamentRepository
 from src.domain.entities.users import User
+from src.infra.repositories.bets.base import BaseBetRepository
+from src.infra.repositories.tournaments.base import BaseTournamentRepository
 from src.infra.repositories.users.base import BaseUserRepository
 
 

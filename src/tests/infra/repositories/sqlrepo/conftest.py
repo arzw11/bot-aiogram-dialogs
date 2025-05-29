@@ -11,12 +11,12 @@ from src.domain.entities.bets import (
     Bet as BetEntity,
     BetResult,
 )
+from src.domain.entities.tournaments import Tournament as TournamentEntity
+from src.domain.entities.users import User as UserEntity
 from src.infra.database.models.base import TimedBaseModel as Base
 from src.infra.repositories.bets.sqlalchemy_repository import SQLBetRepository
 from src.infra.repositories.tournaments.sqlalchemy_repository import SQLTournamentRepository
 from src.infra.repositories.users.sqlalchemy_repository import SQLUserRepository
-from src.domain.entities.tournaments import Tournament as TournamentEntity
-from src.domain.entities.users import User as UserEntity
 
 
 DATABASE_URL = "sqlite+aiosqlite:///:memory:"
